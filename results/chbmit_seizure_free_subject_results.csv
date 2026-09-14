@@ -1,0 +1,3 @@
+test_subject,non_seizure_windows,true_negatives,false_positives,false_positive_rate,specificity
+chb08,94,84,10,0.10638297872340426,0.8936170212765957
+chb10,253,195,58,0.22924901185770752,0.7707509881422925
