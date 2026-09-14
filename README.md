@@ -1,207 +1,239 @@
 # Context-Aware Personalized Seizure Detection for Wearable IoT Devices
 
-This project presents a context-aware and personalized seizure monitoring framework using wearable sensors and lightweight machine learning models. The system integrates physiological sensing, motion-based activity recognition, and EEG-based seizure detection to improve reliability and reduce false alarms in wearable health monitoring systems.
+This project presents a wearable seizure-monitoring framework that combines physiological sensing, motion-based activity recognition, and EEG-based seizure classification using lightweight machine learning models.
 
-The proposed approach is designed for edge-based IoT environments, enabling continuous monitoring while minimizing reliance on cloud computing.
+The current study evaluates wearable activity recognition and EEG seizure detection independently. The wearable recordings and CHB-MIT EEG recordings originate from different participants and are not synchronized. Integration of both components into a fully context-aware seizure-monitoring system is therefore considered future work.
 
---------------------------------------------------
+---
 
-PROJECT OVERVIEW
+## PROJECT OVERVIEW
 
-Epilepsy is a neurological disorder characterized by recurrent and unpredictable seizures. Continuous monitoring is essential for improving patient safety and enabling timely medical intervention. However, traditional EEG monitoring systems are typically hospital-based and unsuitable for long-term everyday use.
+Epilepsy is a neurological disorder characterized by recurrent and unpredictable seizures. Continuous monitoring can improve patient safety and support timely medical intervention. However, traditional EEG monitoring systems are generally hospital-based and are not suitable for continuous everyday monitoring.
 
-This project explores how wearable IoT devices and machine learning models can support seizure monitoring in real-world environments. The system combines physiological signals, motion sensing, and contextual activity information to enhance seizure detection accuracy and reduce false alarms.
+This project investigates the use of wearable IoT sensors and lightweight machine learning models for seizure-monitoring applications.
 
-The proposed framework includes:
+The framework includes:
 
 - Wearable physiological sensing
 - Motion-based activity recognition
-- EEG-based seizure detection
-- Context-aware decision making
-- Personalized machine learning models
+- EEG-based seizure classification
+- Personalized activity-recognition models
+- A proposed context-aware monitoring architecture
 
---------------------------------------------------
+---
 
-SYSTEM ARCHITECTURE
+## SYSTEM ARCHITECTURE
 
-The system consists of two main components.
+The system contains two experimental components.
 
-Wearable Sensing Unit
+### Wearable Sensing Unit
 
 The wearable prototype is built using:
 
 - Arduino Nano ESP32
-- MAX30102 PPG sensor for heart signal monitoring
-- BMI160 IMU sensor for accelerometer and gyroscope measurements
+- MAX30102 PPG sensor
+- BMI160 accelerometer and gyroscope sensor
 
-These sensors continuously collect physiological and motion data from the user.
+The sensors continuously collect physiological and motion data.
 
-Edge Processing Unit
+The ESP32 performs sensor acquisition and transmits the measurements to a monitoring computer.
 
-A monitoring computer processes the collected signals and performs:
+### Monitoring and Processing Unit
 
-- Signal preprocessing
+Python-based software on the monitoring computer performs:
+
+- Data logging
+- Signal segmentation
 - Feature extraction
-- Activity context recognition
-- Seizure detection using machine learning
-- Context-aware decision logic
+- Activity-context recognition
+- Personalized calibration
+- Machine-learning evaluation
 
-When a seizure event is detected, the system generates an alert notification for monitoring applications or caregivers.
+EEG seizure classification is evaluated separately using the CHB-MIT dataset.
 
---------------------------------------------------
+---
 
-DATASETS USED
+## WEARABLE DATASET
 
-Wearable Sensor Dataset
+Wearable recordings were collected from 13 healthy participants.
 
-A wearable dataset was collected from 13 participants performing four activity contexts:
+The recorded activity contexts were:
 
 - Resting (R)
 - Sleeping (S)
 - Walking (W)
 - Motion / active movement (M)
 
-The recorded signals include:
+Recorded signals include:
 
 - Infrared PPG signal
-- Accelerometer (x, y, z)
-- Gyroscope (x, y, z)
-- Activity context label
+- Accelerometer measurements (x, y, z)
+- Gyroscope measurements (x, y, z)
+- Activity-context label
 
---------------------------------------------------
+The signals were divided into non-overlapping windows of 100 samples, corresponding to approximately 5 seconds at the acquisition rate used in the experiments.
 
-EEG DATASET
+A total of 21 wearable features were extracted for machine-learning evaluation.
 
-Seizure detection experiments were performed using the CHB-MIT Scalp EEG Database, a publicly available dataset commonly used in epilepsy research.
+---
+
+## EEG DATASET
+
+EEG seizure-classification experiments were performed using the CHB-MIT Scalp EEG Database.
 
 Dataset source:
+
 https://physionet.org/content/chbmit/
 
-The EEG recordings were processed to extract seizure and non-seizure segments for model training and evaluation.
+The raw CHB-MIT dataset is not included in this repository because of its large size.
 
---------------------------------------------------
+Processed feature files and experimental results used in this project are included where applicable.
 
-MACHINE LEARNING PIPELINE
+The EEG analysis uses statistical features extracted from seizure and non-seizure windows.
 
-The system follows a multi-stage processing pipeline:
+---
 
-1. Data acquisition from wearable sensors
-2. Signal segmentation into fixed-length windows
-3. Statistical feature extraction
-4. Activity context recognition
-5. EEG-based seizure detection
-6. Context-aware filtering
-7. Alert generation
+## MACHINE LEARNING PIPELINE
 
-Extracted features include:
+### Wearable Activity Recognition
 
-- Mean
-- Standard deviation
-- Minimum and maximum signal values
-- Signal magnitude area
-- Accelerometer magnitude
-- Gyroscope energy
+The wearable processing pipeline consists of:
 
-Random Forest classifiers were used because they are robust, computationally efficient, and suitable for resource-constrained embedded systems.
+1. Sensor data acquisition
+2. Data logging
+3. Window segmentation
+4. Statistical feature extraction
+5. Activity-context classification
+6. Subject-independent evaluation
+7. Personalized calibration
 
---------------------------------------------------
+A Random Forest classifier with 100 trees was used for activity recognition.
 
-EXPERIMENTAL EVALUATION
+### EEG Seizure Classification
 
-Two experimental configurations were used to evaluate the system.
+The EEG processing pipeline consists of:
 
-Leave-One-Subject-Out (LOSO)
+1. CHB-MIT EEG preprocessing
+2. Window segmentation
+3. EEG feature extraction
+4. Seizure/non-seizure classification
+5. Patient-independent evaluation
 
-LOSO validation evaluates the ability of the model to generalize to unseen subjects.
+The wearable activity and EEG seizure experiments are evaluated independently in the current study.
 
-Average classification accuracy:
-85.3%
+---
 
-Personalized Calibration
+## EXPERIMENTAL EVALUATION
 
-A small amount of subject-specific data is incorporated during training to adapt the model to individual physiological characteristics.
+### Leave-One-Subject-Out Activity Recognition
 
-Average classification accuracy improved to:
-92.2%
+Subject-independent activity recognition was evaluated using Leave-One-Subject-Out (LOSO) validation.
 
---------------------------------------------------
+The primary analysis includes the 10 participants who recorded multiple activity contexts.
 
-CONTEXT-AWARE SEIZURE DETECTION
+Mean subject-level results:
 
-EEG-based seizure detection was evaluated with and without contextual activity information. The results show that incorporating activity context reduces false seizure alarms while maintaining comparable detection accuracy.
+- Accuracy: **81.83% ± 13.08%**
+- Balanced Accuracy: **82.74% ± 13.39%**
+- Macro F1-score: **80.75% ± 14.76%**
 
-This demonstrates the advantage of combining physiological monitoring with contextual activity information in wearable seizure detection systems.
+The pooled LOSO evaluation across 666 held-out windows achieved:
 
---------------------------------------------------
+- Accuracy: **81.68%**
+- Balanced Accuracy: **84.29%**
+- Macro F1-score: **83.99%**
 
-REPOSITORY STRUCTURE
+---
 
-seizure-project
+## PERSONALIZED CALIBRATION
+
+Personalization was evaluated by incorporating a small amount of subject-specific calibration data.
+
+For each target participant:
+
+- The first 20% of available samples for each context were used for calibration.
+- The remaining 80% were used for evaluation.
+- The general model was trained using data from the other participants.
+- The personalized model additionally included the target participant's calibration data.
+
+Across the multi-context participants:
+
+- General-model accuracy: **83.03%**
+- Personalized accuracy: **89.42%**
+- Mean improvement: **6.39 percentage points**
+- General balanced accuracy: **83.59%**
+- Personalized balanced accuracy: **89.71%**
+- General Macro F1-score: **81.57%**
+- Personalized Macro F1-score: **85.63%**
+
+The amount of improvement varied between participants.
+
+---
+
+## PATIENT-INDEPENDENT EEG SEIZURE CLASSIFICATION
+
+Patient-independent seizure classification was evaluated using a subset of the CHB-MIT dataset.
+
+Pooled held-out results:
+
+- Accuracy: **83.86%**
+- Balanced Accuracy: **79.18%**
+- Seizure Precision: **78.17%**
+- Seizure Sensitivity: **66.78%**
+- Seizure F1-score: **72.03%**
+- Specificity: **91.58%**
+
+The wearable activity recordings and CHB-MIT EEG recordings are not synchronized. Therefore, the present experiments do not demonstrate that activity context reduces seizure false alarms.
+
+Future synchronized multimodal recordings are required to evaluate this hypothesis.
+
+---
+
+## REPOSITORY STRUCTURE
+
+```text
+seizure_detection/
 │
-├── scripts
-│   ├── feature_extraction.py
-│   ├── train_context_model.py
-│   ├── realtime_context_predict.py
-│   ├── train_chbmit_model.py
-│   └── combined_seizure_detection.py
+├── all_features_clean.csv
+├── data_summary.csv
+├── chbmit_features.csv
+├── chbmit_seizure_events.csv
+├── chbmit_window_index.csv
 │
-├── datasets
-│   ├── wearable_data
-│   └── chbmit
+├── data/
+│   ├── P01/
+│   ├── P02/
+│   ├── ...
+│   └── P13/
 │
-├── models
+├── diagrams/
+│   ├── activity_diagram.png
+│   ├── deployment_diagram.svg
+│   ├── hardware_setup.pdf
+│   ├── hardware_setup2.pdf
+│   └── system_architecture.png
+│
+├── models/
 │   ├── context_model.pkl
-│   └── seizure_model.pkl
+│   ├── context_model_P01.pkl
+│   └── label_encoder.pkl
 │
-├── results
+├── results/
 │   ├── confusion_matrix_loso.pdf
-│   ├── confusion_matrix_personalized.pdf
-│   └── accuracy_summary.csv
+│   ├── seizure_confusion_matrix.pdf
+│   ├── loso_results.csv
+│   ├── loso_summary.csv
+│   ├── personalization_results.csv
+│   ├── personalization_summary.csv
+│   └── CHB-MIT evaluation results
 │
-├── diagrams
-│   ├── system_architecture
-│   ├── activity_diagram
-│   ├── sequence_diagram
-│   └── deployment_diagram
+├── scripts/
+│   ├── logger.py
+│   ├── data_pipeline.py
+│   ├── loso_model.py
+│   ├── personalization_experiment.py
+│   ├── train_chbmit_model.py
+│   ├── plot_seizure_confusion.py
+│   └── other experimental scripts
 │
 └── README.md
-
---------------------------------------------------
-
-TECHNOLOGIES USED
-
-- Python
-- Arduino / ESP32
-- PlantUML
-- Scikit-learn
-- NumPy
-- Pandas
-- Matplotlib
-- MNE
-- WFDB
-
---------------------------------------------------
-
-FUTURE WORK
-
-Future improvements may include:
-
-- Integration of real-time wearable EEG devices
-- Larger and more diverse participant datasets
-- Real-time mobile monitoring applications
-- Long-term real-world testing
-- Advanced deep learning-based seizure detection models
-
---------------------------------------------------
-
-AUTHOR
-
-Shivaani Anand  
-MSc Information Technology – Data Science  
-Halmstad University
-
---------------------------------------------------
-
-LICENSE
-
-This project is intended for research and educational purposes.
